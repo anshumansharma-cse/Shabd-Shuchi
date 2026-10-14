@@ -3,11 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Virtual environments
-.venv/
-venv/
-env/
-
 # Environment variables and secrets
 .env
 .env.*
@@ -21,3 +16,14 @@ htmlcov/
 # IDE and OS files
 .DS_Store
 .vscode/
+
+# Local virtual environments
+.venv/
+venv/
+env/
+.ocr/
+**/.ocr/
+**/.venv/
+
+# Downloaded OCR model weights
+experiments/bodhan-ocr/model/weights/

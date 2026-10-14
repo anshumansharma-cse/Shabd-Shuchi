@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huggingface.co/bodhan-ai/indic-ocr/raw/main/schemas/parse_output.schema.json",
+  "title": "Parsed page JSON (final output)",
+  "description": "Every block carries 'text'.",
+  "type": "object",
+  "required": [
+    "image",
+    "width",
+    "height",
+    "blocks"
+  ],
+  "properties": {
+    "image": {
+      "type": "string"
+    },
+    "width": {
+      "type": "integer",
+      "exclusiveMinimum": 0
+    },
+    "height": {
+      "type": "integer",
+      "exclusiveMinimum": 0
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/block"
+      }
+    }
+  },
+  "$defs": {
+    "block": {
+      "type": "object",
+      "required": [
+        "order",
+        "bbox_xyxy",
+        "text"
+      ],
+      "properties": {
+        "order": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reading-order rank. Gap-free and 0-based across the page."
+        },
+        "label": {
+          "type": "string",
+          "description": "IndicDocLayout class. Restricted to the taxonomy unless 'type' is given."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Text",
+            "Title",
+            "SectionHeader",
+            "Table",
+            "Equation",
+            "Caption",
+            "Footnote",
+            "PageHeader",
+            "PageFooter",
+            "PageNumber",
+            "Figure",
+            "Picture"
+          ],
+          "description": "Pipeline category; selects the prompt. Derived from 'label' when omitted."
+        },
+        "bbox_xyxy": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "Pixel [x0, y0, x1, y1], clamped to the page."
+        },
+        "conf": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "text": {
+          "type": "string",
+          "description": "Transcription. \"\" means detected but deliberately not sent to the recognizer; the block is kept, not dropped."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "not": {
+              "required": [
+                "type"
+              ]
+            }
+          },
+          "then": {
+            "required": [
+              "label"
+            ],
+            "properties": {
+              "label": {
+                "enum": [
+                  "Question",
+                  "Paragraph",
+                  "Answer",
+                  "List",
+                  "Title",
+                  "Section-title",
+                  "Equation",
+                  "Table",
+                  "Diagram",
+                  "Image",
+                  "MCQ",
+                  "Infobox",
+                  "Sub-section-title",
+                  "Expression",
+                  "Image-caption",
+                  "Placeholder-text",
+                  "Chart",
+                  "Solved-example",
+                  "Footnote",
+                  "Table-caption",
+                  "Sub-sub-section-title",
+                  "Footer",
+                  "Header",
+                  "Code",
+                  "Page-number",
+                  "Chapter-title",
+                  "Chapter-end-section",
+                  "Folio",
+                  "Reference",
+                  "Table-of-contents",
+                  "Index",
+                  "Advertisement",
+                  "Author",
+                  "Dateline",
+                  "Contact-info",
+                  "Website-link",
+                  "Flag"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
